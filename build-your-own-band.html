@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Build Your Own Band</title>
+<style>
+:root{
+  --panel:#fff7fb;--card:#ffffff;--text:#242038;--muted:#746f86;--border:#eadff0;
+  --accent:#7c3aed;--accentbg:#ede9fe;--c2:#fb7185;--c3:#f59e0b;--c4:#10b981;--c5:#38bdf8;--c6:#8b5cf6;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#fff;color:var(--text)}
+main{max-width:1100px;margin:auto;padding:24px}
+.hero,.stage,.panel{border:1px solid var(--border);border-radius:28px;background:var(--panel)}
+.hero{padding:28px;display:flex;gap:24px;justify-content:space-between;align-items:center;overflow:hidden}
+.badge{display:inline-flex;gap:8px;align-items:center;padding:6px 10px;border-radius:999px;background:#fff;border:1px solid var(--border);font-size:12px;font-weight:700;color:var(--muted)}
+h1{font-size:34px;margin:12px 0 8px}
+p{color:var(--muted);line-height:1.5}
+button{font:inherit}
+#playBtn{border:0;background:var(--accentbg);color:var(--text);padding:14px 22px;border-radius:999px;font-weight:800;cursor:pointer;min-height:48px}
+.stage{margin-top:18px;padding:20px;background:var(--card)}
+.topline{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:16px}
+.grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+.inst{min-height:135px;border:2px solid transparent;border-radius:24px;padding:14px;text-align:left;cursor:pointer;background:#fafafa;transition:.25s}
+.inst[aria-pressed="true"]{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 7px 0 rgba(124,58,237,.12)}
+.inst[aria-pressed="true"]::after{content:"PLAYING";display:inline-block;margin-top:8px;font-size:9px;font-weight:900;letter-spacing:.12em;color:var(--accent)}
+.icon{font-size:40px}.name{margin-top:12px;font-weight:900}.desc{font-size:12px;color:var(--muted);margin-top:4px}
+.vocal{background:rgba(251,113,133,.12)}.guitar{background:rgba(245,158,11,.12)}.keyboard{background:rgba(16,185,129,.12)}.bass{background:rgba(56,189,248,.12)}.drums{background:rgba(139,92,246,.12)}.remix{background:linear-gradient(135deg,rgba(251,113,133,.13),rgba(56,189,248,.13))}
+.lower{display:grid;grid-template-columns:1.2fr .8fr;gap:16px;margin-top:18px}.panel{padding:20px}
+.mixrow{display:grid;grid-template-columns:120px 1fr;gap:12px;align-items:center;font-size:12px;margin:12px 0}.track{height:9px;background:#f3edf7;border-radius:999px;overflow:hidden}.fill{height:100%;border-radius:999px;transition:width .4s}
+#visualizer{height:90px;display:flex;gap:5px;align-items:flex-end}#visualizer span{flex:1;height:18%;border-radius:999px;background:var(--c4);opacity:.8}
+.playing #visualizer span{animation:b .7s ease-in-out infinite alternate}.playing #visualizer span:nth-child(2n){background:var(--c3);animation-duration:.45s}.playing #visualizer span:nth-child(3n){background:var(--c5);animation-duration:.6s}.playing #visualizer span:nth-child(4n){background:var(--c6);animation-duration:.9s}
+@keyframes b{from{height:16%}to{height:92%}}
+@media(max-width:850px){.grid{grid-template-columns:repeat(3,1fr)}.lower{grid-template-columns:1fr}.hero{align-items:flex-start;flex-direction:column}}
+@media(max-width:520px){main{padding:14px}.grid{grid-template-columns:repeat(2,1fr)}h1{font-size:28px}.mixrow{grid-template-columns:100px 1fr}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main id="band">
+<section class="hero">
+  <div>
+    <div class="badge">● INTERACTIVE MUSIC TOY</div>
+    <h1>Build your own band 🎵</h1>
+    <p>Start the track, then tap musicians to bring them in and out. Each layer stays locked to the same beat so the arrangement changes smoothly.</p>
+  </div>
+  <button id="playBtn">▶ Start the band</button>
+</section>
+
+<section class="stage">
+  <div class="topline"><div><strong>Your stage</strong><div id="status" style="color:var(--muted);font-size:13px;margin-top:4px">Band is ready — press Start</div></div><div class="badge">108 BPM</div></div>
+  <div class="grid">
+    <button class="inst vocal" data-inst="vocal" aria-pressed="false"><div class="icon">🎤</div><div class="name">Vocalist</div><div class="desc">Dreamy vocal chops</div></button>
+    <button class="inst guitar" data-inst="guitar" aria-pressed="false"><div class="icon">🎸</div><div class="name">Guitar</div><div class="desc">Bright rhythmic riffs</div></button>
+    <button class="inst keyboard" data-inst="keyboard" aria-pressed="false"><div class="icon">🎹</div><div class="name">Keyboard</div><div class="desc">Warm chord sparkle</div></button>
+    <button class="inst bass" data-inst="bass" aria-pressed="false"><div class="icon">🎸</div><div class="name">Bass</div><div class="desc">Bouncy low-end groove</div></button>
+    <button class="inst drums" data-inst="drums" aria-pressed="false"><div class="icon">🥁</div><div class="name">Drummer</div><div class="desc">Kick, snare & hats</div></button>
+    <button class="inst remix" data-inst="remix" aria-pressed="false"><div class="icon">✨</div><div class="name">Remix</div><div class="desc">FX + rhythmic twists</div></button>
+  </div>
+</section>
+
+<div class="lower">
+  <section class="panel">
+    <div class="topline"><div><strong>Live mix</strong><div style="font-size:12px;color:var(--muted);margin-top:4px">See who is currently playing</div></div><button id="allBtn">Add full band</button></div>
+    <div id="bars"></div>
+  </section>
+  <section class="panel">
+    <strong>Now playing</strong>
+    <div id="visualizer"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+    <h2 id="combo">Waiting for your band…</h2>
+    <p id="comboDesc">Try drums + bass first, then layer guitar, keys and vocals. Remix adds movement and character.</p>
+  </section>
+</div>
+</main>
+
+<script>
+(()=> {
+const root=document.getElementById('band'), playBtn=document.getElementById('playBtn'),
+status=document.getElementById('status'), combo=document.getElementById('combo'),
+comboDesc=document.getElementById('comboDesc'), allBtn=document.getElementById('allBtn'),
+bars=document.getElementById('bars'), buttons=[...document.querySelectorAll('.inst')];
+const active={vocal:false,guitar:false,keyboard:false,bass:false,drums:false,remix:false};
+const labels={vocal:'Vocalist',guitar:'Electric Guitar',keyboard:'Keyboard',bass:'Bass',drums:'Drummer'};
+let ctx=null,master,delay,feedback,delayGain,filter,timer,nextStep=0,step=0,playing=false;
+const gains={}, bpm=108, sixteenth=60/bpm/4;
+const N={C3:130.81,D3:146.83,E3:164.81,G3:196,A3:220,C4:261.63,D4:293.66,E4:329.63,G4:392,A4:440,C5:523.25};
+function init(){if(ctx)return;ctx=new (window.AudioContext||window.webkitAudioContext)();master=ctx.createGain();master.gain.value=.58;filter=ctx.createBiquadFilter();filter.type='lowpass';filter.frequency.value=14500;delay=ctx.createDelay(.8);delay.delayTime.value=.22;feedback=ctx.createGain();feedback.gain.value=.18;delayGain=ctx.createGain();delayGain.gain.value=.12;delay.connect(feedback);feedback.connect(delay);delay.connect(delayGain);delayGain.connect(master);master.connect(filter);filter.connect(ctx.destination);['vocal','guitar','keyboard','bass','drums'].forEach(k=>{const g=ctx.createGain();g.gain.value=0;g.connect(master);g.connect(delay);gains[k]=g})}
+function tone(f,t,d,type,a,dest){const o=ctx.createOscillator(),g=ctx.createGain();o.type=type;o.frequency.setValueAtTime(f,t);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(a,t+.012);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(dest);o.start(t);o.stop(t+d+.03)}
+function kick(t){const o=ctx.createOscillator(),g=ctx.createGain();o.frequency.setValueAtTime(145,t);o.frequency.exponentialRampToValueAtTime(44,t+.12);g.gain.setValueAtTime(.65,t);g.gain.exponentialRampToValueAtTime(.001,t+.18);o.connect(g);g.connect(gains.drums);o.start(t);o.stop(t+.2)}
+function noise(t,dur,a){const n=Math.max(1,Math.floor(ctx.sampleRate*dur)),b=ctx.createBuffer(1,n,ctx.sampleRate),d=b.getChannelData(0);for(let i=0;i<n;i++)d[i]=Math.random()*2-1;const s=ctx.createBufferSource(),f=ctx.createBiquadFilter(),g=ctx.createGain();s.buffer=b;f.type='highpass';f.frequency.value=a>.2?1800:6500;g.gain.setValueAtTime(a,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);s.connect(f);f.connect(g);g.connect(gains.drums);s.start(t)}
+const bassSeq=['C3','C3','G3','C3','A3','A3','G3','E3','C3','C3','G3','C3','D3','D3','E3','G3'];
+const lead=[ 'E4',null,'G4',null,'A4',null,'G4','E4','D4',null,'E4',null,'G4',null,'E4','D4'];
+const vocal=[null,null,'G4',null,null,'A4',null,'G4',null,null,'E4',null,'D4',null,'E4',null];
+const chords=[[N.C4,N.E4,N.G4],[N.A3,N.C4,N.E4],[N.G3,N.D4,N.G4],[N.D4,N.E4,N.A4]];
+function schedule(s,t){if(s%4===0)kick(t);if(s%4===2)noise(t,.09,.22);if(s%2===1)noise(t,.035,.055);if(s%2===0)tone(N[bassSeq[s]],t,.24,'square',.085,gains.bass);if(lead[s])tone(N[lead[s]],t,.17,'sawtooth',.045,gains.guitar);if(s%4===0)chords[(s/4)%4].forEach((f,i)=>tone(f,t,.72,i===1?'sine':'triangle',.026,gains.keyboard));if(vocal[s]){tone(N[vocal[s]],t,.42,'sine',.04,gains.vocal);tone(N[vocal[s]]/2,t,.42,'triangle',.018,gains.vocal)}if(active.remix&&s%4===3)tone([N.C5,N.A4,N.G4][(s>>2)%3],t,.1,'square',.025,gains.guitar)}
+function scheduler(){while(nextStep<ctx.currentTime+.12){schedule(step,nextStep);nextStep+=sixteenth;step=(step+1)%16}}
+function fade(k,on){if(!ctx||!gains[k])return;const g=gains[k].gain,now=ctx.currentTime;g.cancelScheduledValues(now);g.setValueAtTime(Math.max(.0001,g.value),now);g.linearRampToValueAtTime(on?1:0,now+.38)}
+function remix(on){if(!ctx)return;const now=ctx.currentTime;filter.frequency.cancelScheduledValues(now);filter.frequency.linearRampToValueAtTime(on?5200:14500,now+.45);delayGain.gain.cancelScheduledValues(now);delayGain.gain.linearRampToValueAtTime(on?.34:.12,now+.45);feedback.gain.cancelScheduledValues(now);feedback.gain.linearRampToValueAtTime(on?.42:.18,now+.45)}
+function sync(){buttons.forEach(b=>b.setAttribute('aria-pressed',String(active[b.dataset.inst])));renderBars()}
+function renderBars(){bars.innerHTML='';['vocal','guitar','keyboard','bass','drums'].forEach((k,i)=>{const row=document.createElement('div');row.className='mixrow';row.innerHTML='<span><strong>'+labels[k]+'</strong></span><div class="track"><div class="fill" style="width:'+(active[k]?'100%':'4%')+';background:var(--c'+((i%5)+2)+')"></div></div>';bars.appendChild(row)})}
+function update(){const regular=Object.keys(active).filter(k=>k!=='remix'&&active[k]);if(!playing){if(!ctx)status.textContent='Band is ready — press Start';return}status.textContent=regular.length?regular.length+' musician'+(regular.length===1?'':'s')+' playing'+(active.remix?' + Remix ✨':''):'The stage is quiet — add a musician';if(!regular.length){combo.textContent='Silent stage';comboDesc.textContent='Choose any musician to fade a new layer into the track.'}else if(active.remix){combo.textContent='✨ '+(regular.length>=4?'Festival Remix':'Custom Remix');comboDesc.textContent='The remix engine is filtering, echoing and reshaping your current instrument combination in real time.'}else if(active.drums&&active.bass&&regular.length===2){combo.textContent='Pocket Groove';comboDesc.textContent='A tight rhythm-section foundation. Add guitar or keyboard for harmony, then vocals on top.'}else if(regular.length>=5){combo.textContent='Full Band Energy';comboDesc.textContent='Every core layer is active and synchronized. Toggle Remix for a more experimental version.'}else{combo.textContent=regular.map(k=>labels[k]).join(' + ');comboDesc.textContent='Your arrangement is changing live while the underlying beat and harmony stay synchronized.'}}
+function start(){init();ctx.resume();if(!Object.values(active).slice(0,5).some(Boolean)){active.drums=true;active.bass=true;fade('drums',true);fade('bass',true);sync()}playing=true;nextStep=ctx.currentTime+.06;step=0;timer=setInterval(scheduler,25);root.classList.add('playing');playBtn.textContent='⏸ Pause';update()}
+function stop(){playing=false;clearInterval(timer);timer=null;root.classList.remove('playing');playBtn.textContent='▶ Resume';status.textContent='Paused — your band is still assembled';ctx&&ctx.suspend()}
+playBtn.addEventListener('click',()=>playing?stop():start());
+buttons.forEach(b=>b.addEventListener('click',()=>{init();const k=b.dataset.inst;active[k]=!active[k];if(k==='remix')remix(active[k]);else fade(k,active[k]);sync();update()}));
+allBtn.addEventListener('click',()=>{init();['vocal','guitar','keyboard','bass','drums'].forEach(k=>{active[k]=true;fade(k,true)});sync();update()});
+sync();
+})();
+</script>
+</body></html>
